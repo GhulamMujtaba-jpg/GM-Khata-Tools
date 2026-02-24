@@ -1,1 +1,42 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profit Calculator</title>
+</head>
+<body>
+
+<h2>Product Profit Calculator</h2>
+
+Product Name:<br>
+<input type="text" id="product"><br><br>
+
+Buy Price:<br>
+<input type="number" id="buy"><br><br>
+
+Sale Price:<br>
+<input type="number" id="sale"><br><br>
+
+Quantity:<br>
+<input type="number" id="qty"><br><br>
+
+<button onclick="calculate()">Calculate Profit</button>
+
+<h3 id="result"></h3>
+
+<script>
+function calculate(){
+    var buy = parseFloat(document.getElementById("buy").value);
+    var sale = parseFloat(document.getElementById("sale").value);
+    var qty = parseFloat(document.getElementById("qty").value);
+
+    var totalProfit = (sale - buy) * qty;
+
+    document.getElementById("result").innerHTML =
+        "Total Profit: " + totalProfit +
+        "<br>One Day Profit: " + totalProfit;
+}
+</script>
+
+</body>
+</html>
