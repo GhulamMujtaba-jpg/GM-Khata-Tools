@@ -17,8 +17,9 @@ function login(){
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
 
+    // Login credentials
     if(email === "admin@gmail.com" && password === "1234"){
-        window.location.href = "dashboard.html";
+        window.location.href = "dashboard.html"; // Redirect to dashboard
     } else {
         alert("Wrong Email or Password");
     }
