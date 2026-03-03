@@ -67,7 +67,6 @@ th,td{text-align:center;padding:6px;border:1px solid #ccc}
 
 <h3>Daily Sales Records</h3>
 
-<!-- NEW DATE SEARCH FUNCTION -->
 <input type="date" id="searchDate">
 <button onclick="searchByDate()">Search By Date</button>
 
@@ -82,7 +81,6 @@ let products = JSON.parse(localStorage.getItem("products")) || [];
 let sales = JSON.parse(localStorage.getItem("sales")) || [];
 let currentView = "card";
 let currentDay = parseInt(localStorage.getItem("currentDay")) || 1;
-
 document.getElementById("currentDay").innerText = currentDay;
 
 function save(){
@@ -207,15 +205,6 @@ function updateDashboard(){
     profitEl.className=overallProfit>=0?"green":"red";
 }
 
-function clearSales(){
-    if(confirm("Clear all sales? Products will remain.")){
-        sales = sales.filter(s=>s.day!==currentDay);
-        products.forEach(p=>p.sold=0);
-        save();
-        refreshView();
-    }
-}
-
 function nextDay(){
     if(confirm("Start next day? Current day sales will be saved.")){
         currentDay += 1;
@@ -228,47 +217,46 @@ function nextDay(){
 function renderDailyRecords(){
     let container = document.getElementById("dailyRecords");
     container.innerHTML="";
+
     if(sales.length===0){
         container.innerHTML="<div class='card'>No sales yet</div>";
         return;
     }
 
-    let grouped = {};
-    sales.forEach(s=>{
-        if(!grouped[s.date]) grouped[s.date]=[];
-        grouped[s.date].push(s);
-    });
+    let days = [...new Set(sales.map(s=>s.day))].sort((a,b)=>a-b);
 
-    for(let date in grouped){
-        let daySales = grouped[date];
+    days.forEach(day=>{
+        let daySales = sales.filter(s=>s.day===day);
         let total = daySales.reduce((a,b)=>a+b.sale,0);
+        let date = daySales[0].date;
 
         let div=document.createElement("div");
         div.className="card";
-        div.innerHTML=`<b>Date: ${date}</b><br>Total Sale: ${total}<br>`;
-
+        div.innerHTML=`<b>Day ${day}</b><br>
+                       Date: ${date}<br>
+                       Total Sale: ${total}<br>`;
         container.appendChild(div);
-    }
+    });
 }
 
 function searchByDate(){
-    let searchDate = document.getElementById("searchDate").value;
-    let container = document.getElementById("dailyRecords");
+    let searchDate=document.getElementById("searchDate").value;
+    if(!searchDate){renderDailyRecords();return;}
+
+    let container=document.getElementById("dailyRecords");
     container.innerHTML="";
 
-    let filtered = sales.filter(s=>s.date===searchDate);
+    let filtered=sales.filter(s=>s.date===searchDate);
 
     if(filtered.length===0){
         container.innerHTML="<div class='card'>No record found</div>";
         return;
     }
 
-    let total = filtered.reduce((a,b)=>a+b.sale,0);
-
+    let total=filtered.reduce((a,b)=>a+b.sale,0);
     let div=document.createElement("div");
     div.className="card";
-    div.innerHTML=`<b>Date: ${searchDate}</b><br>Total Sale: ${total}<br>`;
-
+    div.innerHTML=`<b>Date: ${searchDate}</b><br>Total Sale: ${total}`;
     container.appendChild(div);
 }
 
