@@ -28,7 +28,7 @@
         border-radius: 10px;
         border: none;
         margin-bottom: 15px;
-        background-color: #ffff99; /* Highlighted result */
+        background-color: #ffff99;
         color: #222;
         font-weight: bold;
         text-shadow: 1px 1px #aaa;
@@ -113,8 +113,19 @@
 
     function calculate() {
         try {
-            let expression = display.value.replace('%','/100');
-            display.value = eval(expression);
+            let expression = display.value;
+
+            // replace ALL % with /100
+            expression = expression.replace(/%/g, "/100");
+
+            let result = eval(expression);
+
+            if(result === Infinity || result === -Infinity || isNaN(result)){
+                display.value = "Error";
+            } else {
+                display.value = result;
+            }
+
         } catch (e) {
             display.value = 'Error';
         }
